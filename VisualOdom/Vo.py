@@ -36,7 +36,6 @@ class VisualOdometry():
 
     @staticmethod
     def _load_calib(filepath):
-        """CORREGIDO: Mejor manejo de errores en carga de calibración"""
         try:
             with open(filepath, 'r') as f:
                 line = f.readline().strip()
@@ -136,7 +135,6 @@ class VisualOdometry():
                 if m.distance < 0.7 * n.distance:  # MEJORADO: Ratio más estricto (0.7 vs 0.8)
                     good.append(m)
 
-        # AGREGADO: Verificar número mínimo de matches
         if len(good) < 15:  # Mínimo 15 matches para estabilidad
             print(f"Advertencia: Solo {len(good)} matches buenos en frame {i}")
             if len(good) < 8:  # Menos de 8 es crítico
