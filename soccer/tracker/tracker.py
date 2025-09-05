@@ -1,36 +1,203 @@
 from ultralytics import YOLO 
 import supervision as sv #for tracker
+import pickle
+import cv2
+import os 
+import sys
+sys.path.append('../')
+from utils import get_center_bounding_box , get_width
+import numpy as np
 
 class Tracker : 
     def __init__(self, model_path):
         self.model = YOLO(model_path)
-        self.tracker = sv.ByteTrack()
+        self.tracker = sv.ByteTrack() # byte track, see notes withing repo
     
 
     def detect_frames (self, frames):
 
-        batch_size = 20 
+        batch_size = 20  # process 20 frames at same time
         detections = []
 
         for i in range (0, len(frames), batch_size): 
-            detections_batch = self.model.predict(frames[i:i+batch_size], conf = 0.1) #explain, can be model.predict or model.track
+            detections_batch = self.model.predict(frames[i:i+batch_size], conf = 0.1) #
             detections += detections_batch
-            break # demo not all frames
         return detections
 
-    def get_object_tracks(self, frames):
+    def get_object_tracks(self, frames, read_from_stub = False, stub_path = None):
 
-        detections = self.detect_frames(frames) 
+        if read_from_stub and stub_path is not None and os.path.exists(stub_path):
+            with open(stub_path, 'rb') as f:
+                tracks = pickle.load(f)
+            return tracks
+
+
+        detections = self.detect_frames(frames)
+
+
+
+
+        # Data structure for tracking :
+        '''
+        Example : 
+            tracks = {
+                "players" : {1 : {"bounding_box" : [x1, y1, x2, y2]}, 
+                            {2 : {"bounding_box" : [x1, y1, x2, y2]},
+                "ball" : {1 : {"Bounding_box" " [x,y,w,h]}}
+                }    
+
+        '''
+        tracks = {
+            "players" :[] , # list of all players in each frame 
+            "referees": [], #
+            "ball" : [], #
+        }
+
+
+
 
         for frame_num, detection in enumerate(detections):  #looping detections
             cls_names = detection.names 
             cls_names_inv = {v:k for k , v in cls_names.items()} #switch names for clarity
 
+            print(cls_names)
 
             # convert for sv format
             detection_supervision = sv.Detections.from_ultralytics(detection)
 
-            print(detection_supervision)
 
-            break
 
+            # convert goalkeeper to player object
+            for object_ind , class_id in enumerate(detection_supervision.class_id): 
+                if cls_names[class_id] == "goalkeeper": 
+                    detection_supervision.class_id[object_ind] = cls_names_inv["player"]
+
+
+
+            # track objects 
+
+            '''
+            1. predicts position using Kalman Filter
+            2. Measure IoU between predictions and detections (see notes)
+            3. Asign IDs based on similarity
+            4. Manage apearance objects
+            
+            '''
+            detection_with_trakcs = self.tracker.update_with_detections(detection_supervision)
+            
+            tracks ["players"].append({}) # dictionary has key for track id and value is bounding box 
+            tracks ["referees"].append({})
+            tracks ["ball"].append({})
+
+
+            for frame_detection in detection_with_trakcs: 
+                bounding_box = frame_detection[0].tolist() # frame detection has several items in list (0:bounding box, 1 : mask, 2 : condifence array, 3: class id )
+                cls_id = frame_detection[3]
+                track_id = frame_detection[4] # 4 item in list
+
+                if cls_id == cls_names_inv["player"]:
+                    # frame number : list
+                    tracks["players"][frame_num][track_id] = {"bounding_box" :bounding_box}
+
+                if cls_id == cls_names_inv["referee"]:
+                    # frame number : list
+                    tracks["referees"][frame_num][track_id] = {"bounding_box" :bounding_box}
+
+            for frame_detection in detection_supervision : 
+                bounding_box = frame_detection[0].tolist()
+                cls_id = frame_detection[3]
+                if cls_id == cls_names_inv ['ball']:
+                    tracks["ball"][frame_num][1] = {"bounding_box":bounding_box}
+
+
+        if stub_path is not None : 
+            with open(stub_path, 'wb') as f :
+                pickle.dump (tracks, f)
+
+        return tracks # dictionary of list of dictionaries
+    
+
+    def draw_triangle(self, frame, bounding_box, color): 
+        # button poing traingle pointer ball
+        y = int(bounding_box[1])
+        x, _ = get_center_bounding_box(bounding_box)
+
+        triangle_points = np.array([
+            [x,y], # first point
+            [x-10, y -20],
+            [x+10 , y+20]
+        ])
+        cv2.drawContours(frame, [triangle_points], 0, color, cv2.FILLED)
+        cv2.drawContours(frame, [triangle_points], 0, (0,0,0), 2)
+
+        return frame 
+
+
+    def draw_ellipse(self, frame, bounding_box, color, track_id=None):
+        # button bounding box
+        y2 = int(bounding_box[3])
+        
+        x_center , _ = get_center_bounding_box(bounding_box)
+        width = get_width(bounding_box)
+
+        cv2.ellipse(frame, center=(x_center, y2), axes=(int(width), int(0.35*width)), angle=0,
+                    startAngle=-45, endAngle=235, color=color, thickness=2, lineType=cv2.LINE_4)
+        
+
+
+        rectangle_width = 40 
+        rectangle_height = 20 
+        x1_rect = x_center - rectangle_width//2 # move half width of the center of rectangle
+        x2_rect = x_center + rectangle_width//2 # move half width of the center on user
+        y1_rect = (y2 - rectangle_height//2) + 15 
+        y2_rect = (y2 + rectangle_height//2) + 15 
+
+
+        if track_id is not None :
+            cv2.rectangle(frame, (int(x1_rect), int(x2_rect)), (int(y1_rect), int(y2_rect)), color, cv2.FILLED)
+            
+            # visualization of rectangle with track ID
+            x1_text = x1_rect + 12 
+            if track_id > 99 : 
+                x1_text =-10 
+
+            cv2.putText(frame,
+                        f"{track_id}", 
+                        (int(x1_text),int(y1_rect + 15)), 
+                        cv2.FONT_ITALIC, 
+                        0.6 , 
+                        (0,0,0), 
+                        2) 
+
+
+        return frame
+
+
+
+    def draw_annotations(self, video_frames, tracks): 
+        output_video_frames = []
+        for frame_num , frame in enumerate(video_frames):
+            frame  = frame.copy () # to save origin list intact
+
+            # draw circle under player
+            player_dict = tracks["players"][frame_num]
+            ball_dict = tracks["ball"][frame_num]
+            referee_dict = tracks["referees"][frame_num]
+
+            # Draw players
+
+            for track_id, player in player_dict.items(): 
+                frame = self.draw_ellipse(frame, player["bounding_box"], (0,0,255), track_id) 
+
+
+            for _, referee in referee_dict.items(): 
+                frame = self.draw_ellipse(frame, referee["bounding_box"], (0,255,255), track_id) 
+
+            # draw ball
+
+            for track_id , ball in ball_dict.items():
+                frame = self.draw_triangle(frame, ball["bounding_box"], (0, 255, 0))
+
+
+            output_video_frames.append(frame)
+        return output_video_frames
