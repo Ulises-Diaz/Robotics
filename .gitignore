@@ -1,11 +1,24 @@
-# Ignorar modelos de YOLO
+# --- Archivos de video (entrada y salida) ---
+*.avi
+*.mp4
+
+# --- Modelos de YOLO ---
 soccer/models/
 
-# Ignorar video de entrada específico
-soccer/input_videos/08fd33_4.mp4
+# --- Carpeta runs generada por YOLO (detecciones, predicciones, etc.) ---
+soccer/runs/
 
-# Ignorar video de salida específico
-soccer/output_videos/output_video.avi
+# --- Videos de entrada/salida ---
+soccer/output_videos/
+soccer/input_videos/
 
-# Ignorar resultados de runs
-soccer/runs/predict/08fd33_4.avi 
+# --- Archivos de Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Archivos temporales de sistema ---
+.DS_Store
+*.swp
+*.tmp

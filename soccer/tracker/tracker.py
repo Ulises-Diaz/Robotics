@@ -119,13 +119,13 @@ class Tracker :
 
     def draw_triangle(self, frame, bounding_box, color): 
         # button poing traingle pointer ball
-        y = int(bounding_box[1])
+        y = int(bounding_box[1]) # top edge
         x, _ = get_center_bounding_box(bounding_box)
 
         triangle_points = np.array([
             [x,y], # first point
-            [x-10, y -20],
-            [x+10 , y+20]
+            [x-10 , y -20],
+            [x+10 ,y-20]
         ])
         cv2.drawContours(frame, [triangle_points], 0, color, cv2.FILLED)
         cv2.drawContours(frame, [triangle_points], 0, (0,0,0), 2)
@@ -154,7 +154,7 @@ class Tracker :
 
 
         if track_id is not None :
-            cv2.rectangle(frame, (int(x1_rect), int(x2_rect)), (int(y1_rect), int(y2_rect)), color, cv2.FILLED)
+            cv2.rectangle(frame, (int(x1_rect), int(y1_rect)), (int(x2_rect), int(y2_rect)), color, cv2.FILLED)
             
             # visualization of rectangle with track ID
             x1_text = x1_rect + 12 
@@ -187,11 +187,12 @@ class Tracker :
             # Draw players
 
             for track_id, player in player_dict.items(): 
-                frame = self.draw_ellipse(frame, player["bounding_box"], (0,0,255), track_id) 
+                color = player.get("team_color", (0,0,225))
+                frame = self.draw_ellipse(frame, player["bounding_box"], color, track_id) 
 
 
-            for _, referee in referee_dict.items(): 
-                frame = self.draw_ellipse(frame, referee["bounding_box"], (0,255,255), track_id) 
+            for track_id, referee in referee_dict.items(): 
+                frame = self.draw_ellipse(frame, referee["bounding_box"], (0,255,255), track_id)
 
             # draw ball
 

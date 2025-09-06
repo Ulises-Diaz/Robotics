@@ -1,16 +1,45 @@
 from utils import read_video,save_video
 from tracker import Tracker
+import cv2
+from asigner import TeamAssigner
 
 def main():
     # Read video
     video_frames = read_video('input_videos/08fd33_4.mp4')
     
 
+
     # Initialize tracker 
 
     tracker = Tracker('models/best.pt')
 
     tracks = tracker.get_object_tracks(video_frames, read_from_stub= True, stub_path= 'stubs/track_stubs.pkl')
+
+    # save cropped image of player to color segmentation
+
+    # for track_id, player in tracks["players"][0].items():
+    #     bounding_box = player["bounding_box"]
+    #     frame = video_frames[0]
+
+    #     # crop bounding box from frame 
+    #     cropped_image = frame[int(bounding_box[1]):int(bounding_box[3]), int(bounding_box[0]):int(bounding_box[2])]
+
+    #     # saved cropped image
+    #     cv2.imwrite(f'output_videos/cropped_img.jpg', cropped_image)
+        
+
+    team_assigner = TeamAssigner()
+    team_assigner.assign_team_color(video_frames[0], tracks["players"][0])
+
+    for frame_num, player_track in enumerate(tracks['players']):
+        for player_id, track in player_track.items():
+            team = team_assigner.get_player_team(video_frames[frame_num],
+                                                 track["bounding_box"],
+                                                 player_id)
+            
+            tracks["players"][frame_num][player_id]['team'] = team
+            tracks["players"][frame_num][player_id]['team_color'] = team_assigner.team_colors[team]
+
 
     # Draw output
     # Draw object track
