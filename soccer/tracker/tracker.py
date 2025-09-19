@@ -48,7 +48,7 @@ class Tracker :
         detections = self.detect_frames(frames)
 
 
-
+ 
 
         # Data structure for tracking :
         '''
@@ -84,8 +84,6 @@ class Tracker :
             for object_ind , class_id in enumerate(detection_supervision.class_id): 
                 if cls_names[class_id] == "goalkeeper": 
                     detection_supervision.class_id[object_ind] = cls_names_inv["player"]
-
-
 
             # track objects 
 
