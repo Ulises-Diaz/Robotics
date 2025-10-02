@@ -1,0 +1,18 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+Visualization Manager:
+  Displays:
+    - Class: rviz_default_plugins/Map
+      Topic: /map
+      Name: Map
+    - Class: rviz_default_plugins/Path
+      Topic: /planned_path
+      Name: Planned Path
+      Color: 0; 255; 0
+      Alpha: 1.0
+    - Class: rviz_default_plugins/MarkerArray
+      Topic: /waypoint_markers
+      Name: Waypoints
+  Global Options:
+    Fixed Frame: map

@@ -1,0 +1,4 @@
+[console_scripts]
+astar = astar.astar:main
+simple_map = astar.simple_map_publisher:main
+

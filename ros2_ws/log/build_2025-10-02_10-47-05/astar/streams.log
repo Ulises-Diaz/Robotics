@@ -1,0 +1,21 @@
+[0.906s] Invoking command in '/home/uli/robotics/ros2_ws/src/astar': PYTHONPATH=/home/uli/robotics/ros2_ws/build/astar/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/uli/robotics/ros2_ws/install/astar/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/astar build --build-base /home/uli/robotics/ros2_ws/build/astar/build install --record /home/uli/robotics/ros2_ws/build/astar/install.log --single-version-externally-managed install_data
+[1.243s] running egg_info
+[1.243s] writing ../../build/astar/astar.egg-info/PKG-INFO
+[1.243s] writing dependency_links to ../../build/astar/astar.egg-info/dependency_links.txt
+[1.244s] writing entry points to ../../build/astar/astar.egg-info/entry_points.txt
+[1.244s] writing requirements to ../../build/astar/astar.egg-info/requires.txt
+[1.244s] writing top-level names to ../../build/astar/astar.egg-info/top_level.txt
+[1.245s] reading manifest file '../../build/astar/astar.egg-info/SOURCES.txt'
+[1.246s] writing manifest file '../../build/astar/astar.egg-info/SOURCES.txt'
+[1.246s] running build
+[1.246s] running build_py
+[1.246s] running install
+[1.247s] running install_lib
+[1.247s] running install_data
+[1.248s] running install_egg_info
+[1.249s] removing '/home/uli/robotics/ros2_ws/install/astar/lib/python3.10/site-packages/astar-0.0.0-py3.10.egg-info' (and everything under it)
+[1.249s] Copying ../../build/astar/astar.egg-info to /home/uli/robotics/ros2_ws/install/astar/lib/python3.10/site-packages/astar-0.0.0-py3.10.egg-info
+[1.250s] running install_scripts
+[1.269s] Installing astar script to /home/uli/robotics/ros2_ws/install/astar/lib/astar
+[1.269s] writing list of installed files to '/home/uli/robotics/ros2_ws/build/astar/install.log'
+[1.294s] Invoked command in '/home/uli/robotics/ros2_ws/src/astar' returned '0': PYTHONPATH=/home/uli/robotics/ros2_ws/build/astar/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/uli/robotics/ros2_ws/install/astar/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/astar build --build-base /home/uli/robotics/ros2_ws/build/astar/build install --record /home/uli/robotics/ros2_ws/build/astar/install.log --single-version-externally-managed install_data

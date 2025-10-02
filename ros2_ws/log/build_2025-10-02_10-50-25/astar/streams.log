@@ -1,0 +1,24 @@
+[0.896s] Invoking command in '/home/uli/robotics/ros2_ws/src/astar': PYTHONPATH=/home/uli/robotics/ros2_ws/build/astar/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/uli/robotics/ros2_ws/install/astar/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/astar build --build-base /home/uli/robotics/ros2_ws/build/astar/build install --record /home/uli/robotics/ros2_ws/build/astar/install.log --single-version-externally-managed install_data
+[1.228s] running egg_info
+[1.229s] writing ../../build/astar/astar.egg-info/PKG-INFO
+[1.230s] writing dependency_links to ../../build/astar/astar.egg-info/dependency_links.txt
+[1.230s] writing entry points to ../../build/astar/astar.egg-info/entry_points.txt
+[1.230s] writing requirements to ../../build/astar/astar.egg-info/requires.txt
+[1.230s] writing top-level names to ../../build/astar/astar.egg-info/top_level.txt
+[1.232s] reading manifest file '../../build/astar/astar.egg-info/SOURCES.txt'
+[1.233s] writing manifest file '../../build/astar/astar.egg-info/SOURCES.txt'
+[1.233s] running build
+[1.233s] running build_py
+[1.233s] running install
+[1.233s] running install_lib
+[1.235s] running install_data
+[1.235s] copying launch/launch.py -> /home/uli/robotics/ros2_ws/install/astar/share/astar/launch
+[1.235s] copying maps/test_map.yaml -> /home/uli/robotics/ros2_ws/install/astar/share/astar/maps
+[1.235s] copying maps/test_map.py -> /home/uli/robotics/ros2_ws/install/astar/share/astar/maps
+[1.235s] running install_egg_info
+[1.238s] removing '/home/uli/robotics/ros2_ws/install/astar/lib/python3.10/site-packages/astar-0.0.0-py3.10.egg-info' (and everything under it)
+[1.238s] Copying ../../build/astar/astar.egg-info to /home/uli/robotics/ros2_ws/install/astar/lib/python3.10/site-packages/astar-0.0.0-py3.10.egg-info
+[1.239s] running install_scripts
+[1.260s] Installing astar script to /home/uli/robotics/ros2_ws/install/astar/lib/astar
+[1.260s] writing list of installed files to '/home/uli/robotics/ros2_ws/build/astar/install.log'
+[1.283s] Invoked command in '/home/uli/robotics/ros2_ws/src/astar' returned '0': PYTHONPATH=/home/uli/robotics/ros2_ws/build/astar/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/uli/robotics/ros2_ws/install/astar/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/astar build --build-base /home/uli/robotics/ros2_ws/build/astar/build install --record /home/uli/robotics/ros2_ws/build/astar/install.log --single-version-externally-managed install_data
